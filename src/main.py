@@ -1,5 +1,7 @@
 from flask import Flask
 from init import db, ma, bcrypt, jwt
+from controllers.auth_controller import auth_bp
+from controllers.cli_controller import db_commands
 import os
 
 def create_app():
@@ -21,9 +23,10 @@ def create_app():
     @app.route('/')
     def index():
         return 'Test Test Test'
-        
-    #Register Blueprints
 
+    #Register Blueprints
+    app.register_blueprint(db_commands)
+    app.register_blueprint(auth_bp)
 
     #Basic test
     print('Hello Canyon')
