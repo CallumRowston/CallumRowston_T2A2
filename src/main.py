@@ -17,6 +17,11 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
 
+    #Home route for testing
+    @app.route('/')
+    def index():
+        return 'Test Test Test'
+        
     #Register Blueprints
 
 
