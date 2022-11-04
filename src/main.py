@@ -28,6 +28,11 @@ def create_app():
     app.register_blueprint(db_commands)
     app.register_blueprint(auth_bp)
 
+    # Error handling
+    @app.errorhandler(404)
+    def not_found(err):
+        return {'error': str(err)}, 404
+
     #Basic test
     print('Hello Canyon')
     return app

@@ -30,5 +30,6 @@ def seed_db():
         )
     ]
 
+    print("Tables seeded")
     db.session.add_all(users)
     db.session.commit()
