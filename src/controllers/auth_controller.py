@@ -9,4 +9,4 @@ def get_users():
     stmt = db.select(User)
     users = db.session.scalars(stmt)
     return UserSchema(many=True, exclude=['password']).dump(users)
-    
+

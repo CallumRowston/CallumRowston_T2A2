@@ -7,7 +7,7 @@ class Canyon(db.Model):
     name = db.Column(db.String(100), nullable=False, unique=True)
     area = db.Column(db.String(100))
     description = db.Column(db.String(200))
-    estimated_time = db.Column(db.Integer)
+    estimated_time_hrs = db.Column(db.Integer)
     number_abseils = db.Column(db.Integer)
     longest_abseil = db.Column(db.String(20))
     difficulty = db.Column(db.String(20))

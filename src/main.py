@@ -2,6 +2,7 @@ from flask import Flask
 from init import db, ma, bcrypt, jwt
 from controllers.auth_controller import auth_bp
 from controllers.cli_controller import db_commands
+from controllers.canyon_controller import canyon_bp
 import os
 
 def create_app():
@@ -27,6 +28,7 @@ def create_app():
     #Register Blueprints
     app.register_blueprint(db_commands)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(canyon_bp)
 
     # Error handling
     @app.errorhandler(404)
