@@ -1,6 +1,8 @@
-from flask import Blueprint
-from init import db
+from flask import Blueprint, request
+from init import db, bcrypt
 from models.user import User, UserSchema
+from flask_jwt_extended import create_access_token, get_jwt_identity
+from sqlalchemy.exc import IntegrityError
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -12,7 +14,21 @@ def get_all_users():
 
 @auth_bp.route('/register/', methods=['POST'])
 def register_user():
-    pass
+    data = UserSchema().load(request.json)
+    try:
+        user = User(
+            name = data['name'],
+            email = data['email'],
+            password = bcrypt.generate_password_hash(data['password']).decode('utf-8')  
+        )
+
+        db.session.add(user)
+        db.session.commit()
+
+        return UserSchema(exclude=['password']).dump(user), 201
+
+    except IntegrityError:
+        return {'error': F'User with {user.email} already exists'}, 409
 
 @auth_bp.route('/login/', methods=['POST'])
 def login_user():
