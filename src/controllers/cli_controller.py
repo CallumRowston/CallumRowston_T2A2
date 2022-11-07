@@ -52,7 +52,7 @@ def seed_db():
         Canyon(
             name='Firefly',
             area='Newnes',
-            description='A good canyon to the north of the WOlgan Valley with many short abseils and swims.',
+            description='A good canyon to the north of the Wolgan Valley with many short abseils and swims.',
             estimated_time_hrs=8,
             number_abseils=7,
             longest_abseil='20m',

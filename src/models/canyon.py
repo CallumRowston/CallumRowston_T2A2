@@ -6,10 +6,10 @@ class Canyon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     area = db.Column(db.String(100))
-    description = db.Column(db.String(200))
+    description = db.Column(db.String(500))
     estimated_time_hrs = db.Column(db.Integer)
-    number_abseils = db.Column(db.Integer)
-    longest_abseil = db.Column(db.String(20))
+    number_abseils = db.Column(db.Integer, default=0)
+    longest_abseil = db.Column(db.String(20), default='N/A')
     difficulty = db.Column(db.String(20))
     wetsuits_recommended = db.Column(db.Boolean, default=True)
     last_updated = db.Column(db.Date)
@@ -17,5 +17,5 @@ class Canyon(db.Model):
 class CanyonSchema(ma.Schema):
 
     class Meta:
-        fields = ('id', 'name', 'area', 'description', 'estimated_time', 'number_abseils', 'longest_abseil', 'difficulty', 'wetsuits_recommended', 'last_updated')
+        fields = ('id', 'name', 'area', 'description', 'estimated_time_hrs', 'number_abseils', 'longest_abseil', 'difficulty', 'wetsuits_recommended', 'last_updated')
         ordered = True
