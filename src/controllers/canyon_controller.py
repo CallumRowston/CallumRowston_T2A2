@@ -17,7 +17,7 @@ def get_one_canyon(id):
     canyon = db.session.scalar(stmt)
     if canyon:
         return CanyonSchema().dump(canyon)
-    return {'error': f'canyon not found with id {id}'}, 404
+    return {'error': f'Canyon not found with id {id}'}, 404
 
 @canyons_bp.route('/', methods=['POST'])
 # @jwt_required()
@@ -39,7 +39,11 @@ def create_canyon():
 
     db.session.add(canyon)
     db.session.commit()
-    return CanyonSchema().dump(canyon), 201
+    return {
+            'message': f'You have added {canyon.name} Canyon successfully',
+            'canyon': CanyonSchema().dump(canyon)
+    }
+    # return CanyonSchema().dump(canyon), 201
 
 @canyons_bp.route('/<int:id>/', methods=['PUT', 'PATCH'])
 # @jwt_required()
@@ -55,9 +59,10 @@ def update_one_canyon(id):
         canyon.longest_abseil = request.json.get('longest_abseil') or canyon.longest_abseil
         canyon.difficulty = request.json.get('difficulty') or canyon.difficulty
         canyon.wetsuits_recommended = request.json.get('wetsuits_recommended') or canyon.wetsuits_recommended
+        canyon.last_updated = date.today(),
         db.session.commit()
         return CanyonSchema().dump(canyon)
-    return {'error': f'canyon not found with id {id}'}, 404
+    return {'error': f'Canyon not found with id: {id}'}, 404
 
 @canyons_bp.route('/<int:id>/', methods=['DELETE'])
 # @jwt_required()
@@ -68,5 +73,5 @@ def delete_one_canyon(id):
     if canyon:
         db.session.delete(canyon)
         db.session.commit()
-        return {'message': f'Canyon {canyon.name} deleted successfully'}
-    return {'error': f'Canyon not found with id {id}'}, 404
+        return {'message': f'{canyon.name} Canyon with id: {canyon.id} deleted.'}
+    return {'error': f'Canyon not found with id: {id}'}, 404
