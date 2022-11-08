@@ -1,4 +1,5 @@
 from init import db, ma
+from marshmallow import fields
 
 class Canyon(db.Model):
     __tablename__ = 'canyons'
@@ -14,12 +15,18 @@ class Canyon(db.Model):
     wetsuits_recommended = db.Column(db.Boolean, default=True)
     last_updated = db.Column(db.Date)
 
-    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    # user = db.relationship('User', back_populates='canyons')
-    # comments = db.relationship('Comment', back_populates='canyon', cascade='all, delete')
+    user = db.relationship('User', back_populates='canyons')
+    comments = db.relationship('Comment', back_populates='canyon', cascade='all, delete')
 
 class CanyonSchema(ma.Schema):
+
+    # Validation
+
+
+    user = fields.Nested('UserSchema', only=['name', 'email'])
+    comments = fields.List(fields.Nested('CommentSchema', exclude=['canyon']))
 
     class Meta:
         fields = ('id', 'name', 'area', 'description', 'estimated_time_hrs', 'number_abseils', 'longest_abseil', 'difficulty', 'wetsuits_recommended', 'last_updated')
