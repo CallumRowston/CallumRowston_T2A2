@@ -15,8 +15,10 @@ class Canyon(db.Model):
     wetsuits_recommended = db.Column(db.Boolean, default=True)
     last_updated = db.Column(db.Date)
 
+    # Foreign Keys
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
+    # Relationships
     user = db.relationship('User', back_populates='canyons')
     comments = db.relationship('Comment', back_populates='canyon', cascade='all, delete')
 
