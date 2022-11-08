@@ -9,8 +9,8 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
-    # canyons = db.relationship('Canyon', back_populates='user', cascade='all, delete')
-    # comments = db.relationship('Comment', back_populates='user', cascade='all, delete')
+    canyons = db.relationship('Canyon', back_populates='user', cascade='all, delete')
+    comments = db.relationship('Comment', back_populates='user', cascade='all, delete')
 
 class UserSchema(ma.Schema):
 
