@@ -1,5 +1,6 @@
 from init import db, ma
 from marshmallow import fields
+from marshmallow.validate import Length, And, Regexp
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -14,8 +15,16 @@ class User(db.Model):
     comments = db.relationship('Comment', back_populates='user', cascade='all, delete')
 
 class UserSchema(ma.Schema):
-    # Validation - name and password
+    # Validation - name, password, email
+    name = fields.String(validate=And(
+        Length(min=2, max=50, error='Username must be between 2 and 50 characters long'),
+        Regexp('^[a-zA-Z0-9]+$', error='Username can only contain letters, numbers and spaces')
+    ))
 
+    password = fields.String(validate=(
+        Regexp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$',
+        error='Password must contain at least eight characters, at least one uppercase letter, one lowercase letter and one number:')
+    ))
 
     canyons = fields.List(fields.Nested('CanyonSchema', exclude=['user']))
     comments = fields.List(fields.Nested('CommentSchema', exclude=['user']))
