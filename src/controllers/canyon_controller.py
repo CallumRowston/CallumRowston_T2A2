@@ -1,11 +1,11 @@
 from flask import Blueprint, request
+from controllers.auth_controller import authorize_user
 from init import db
 from datetime import date
 from sqlalchemy import and_
 from models.canyon import Canyon, CanyonSchema
 from models.user import User, UserSchema
 from models.comment import Comment, CommentSchema
-from auth_controller import authorize_user
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 canyons_bp = Blueprint('canyons', __name__, url_prefix='/canyons')
@@ -93,13 +93,13 @@ def delete_canyon(id):
 # -------------------------
 
 @canyons_bp.route('/<int:id>/comments/')
-def get_all_comments_from_canyon():
+def get_all_comments_from_canyon(id):
     stmt = db.select(Comment).order_by(Comment.date_posted)
     comments = db.session.scalars(stmt)
     return CommentSchema(many=True).dump(comments)
 
 @canyons_bp.route('/<int:id>/comment/', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def create_comment(id):
     stmt = db.select(Canyon).filter_by(id=id)
     canyon = db.session.scalar(stmt)
@@ -116,7 +116,7 @@ def create_comment(id):
     return {'error': f'canyon not found with id {id}'}, 404
 
 @canyons_bp.route('/<int:id>/comment/<int:comment_id>/', methods=['PUT', 'PATCH'])
-@jwt_required()
+# @jwt_required()
 def edit_comment(id, comment_id):
     stmt = db.select(Comment).filter_by(id=id)
     comment = db.session.scalar(stmt)
