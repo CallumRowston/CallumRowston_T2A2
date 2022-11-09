@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from init import db
 from datetime import date
+from sqlalchemy import and_
 from models.canyon import Canyon, CanyonSchema
 from models.user import User, UserSchema
 from models.comment import Comment, CommentSchema
@@ -57,7 +58,7 @@ def create_canyon():
 
 @canyons_bp.route('/<int:id>/', methods=['PUT', 'PATCH'])
 @jwt_required()
-def update_one_canyon(id):
+def update_canyon(id):
     authorize_user()
     stmt = db.select(Canyon).filter_by(id=id)
     canyon = db.session.scalar(stmt)
@@ -77,7 +78,7 @@ def update_one_canyon(id):
 
 @canyons_bp.route('/<int:id>/', methods=['DELETE'])
 @jwt_required()
-def delete_one_canyon(id):
+def delete_canyon(id):
     authorize_user()
     stmt = db.select(Canyon).filter_by(id=id)
     canyon = db.session.scalar(stmt)
@@ -91,7 +92,13 @@ def delete_one_canyon(id):
 # ~~~~~~~ COMMENTS ~~~~~~~~
 # -------------------------
 
-@canyons_bp.route('/<int:id>/comments', methods=['POST'])
+@canyons_bp.route('/<int:id>/comments/')
+def get_all_comments_from_canyon():
+    stmt = db.select(Comment).order_by(Comment.date_posted)
+    comments = db.session.scalars(stmt)
+    return CommentSchema(many=True).dump(comments)
+
+@canyons_bp.route('/<int:id>/comment/', methods=['POST'])
 @jwt_required()
 def create_comment(id):
     stmt = db.select(Canyon).filter_by(id=id)
@@ -107,3 +114,21 @@ def create_comment(id):
         db.session.commit()
         return CommentSchema().dump(comment)
     return {'error': f'canyon not found with id {id}'}, 404
+
+@canyons_bp.route('/<int:id>/comment/<int:comment_id>/', methods=['PUT', 'PATCH'])
+@jwt_required()
+def edit_comment(id, comment_id):
+    stmt = db.select(Comment).filter_by(id=id)
+    comment = db.session.scalar(stmt)
+
+    stmt = db.select(Comment).where(and_(
+        Comment.id == comment_id,
+        Comment.user_id == get_jwt_identity()
+    ))
+    comment = db.session.scalar(stmt)
+    data = CommentSchema().load(request.json)
+    if comment:
+        comment.messgae = data['message']
+        db.session.commit() # card already in db so don't have to add, just commit changes
+        return CommentSchema().dump(comment)
+    return {'error': f'Comment not found with id {id}'}, 404

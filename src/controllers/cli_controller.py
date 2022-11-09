@@ -3,6 +3,7 @@ from init import db, bcrypt
 from datetime import date, datetime
 from models.user import User
 from models.canyon import Canyon
+from models.comment import Comment
 
 db_commands = Blueprint('db', __name__)
 
@@ -117,7 +118,25 @@ def seed_db():
         )
     ]
 
-    print("Tables seeded")
     db.session.add_all(users)
     db.session.add_all(canyons)
+    db.session.commit()
+
+    comments = [
+        Comment(
+            message='A test comment by the CanyonAdministrator',
+            date_posted=date.today(),
+            canyon_id=2,
+            user_id=1
+        ),
+        Comment(
+            message='A second test comment on the same canyon',
+            date_posted=date.today(),
+            canyon_id=2,
+            user_id=2
+        ),
+    ]
+
+    print("Tables seeded")
+    db.session.add_all(comments)
     db.session.commit()
