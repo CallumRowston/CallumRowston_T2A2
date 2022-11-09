@@ -29,7 +29,7 @@ def register_user():
         return UserSchema(exclude=['password']).dump(user), 201
 
     except IntegrityError:
-        return {'error': F'User with {user.email} already exists'}, 409
+        return {'error': F'{user.email} already in use'}, 409
 
 @auth_bp.route('/login/', methods=['POST'])
 def login_user():
@@ -53,4 +53,3 @@ def authorize_user():
 
     if not user.is_admin:
         abort(401, description='Access denied. You are not an administrator')
-        
