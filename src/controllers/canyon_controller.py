@@ -6,7 +6,7 @@ from sqlalchemy import and_
 from models.canyon import Canyon, CanyonSchema
 from models.user import User, UserSchema
 from models.comment import Comment, CommentSchema
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 canyons_bp = Blueprint('canyons', __name__, url_prefix='/canyons')
 
@@ -94,12 +94,21 @@ def delete_canyon(id):
 
 @canyons_bp.route('/<int:id>/comments/')
 def get_all_comments_from_canyon(id):
-    stmt = db.select(Comment).order_by(Comment.date_posted)
+    stmt = db.select(Comment).filter_by(canyon_id=id)
     comments = db.session.scalars(stmt)
     return CommentSchema(many=True).dump(comments)
 
+@canyons_bp.route('/<int:id>/comments/int:comment_id')
+def get_one_comment_from_canyon(id, comment_id):
+    stmt = db.select(Comment).filter_by(canyon_id=id)
+    comment = db.session.scalar(stmt)
+    stmt = db.select(Canyon).filter_by(canyon_id=id)
+    comment = db.session.scalar(stmt)
+    return CommentSchema().dump(comment)
+
+
 @canyons_bp.route('/<int:id>/comment/', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def create_comment(id):
     stmt = db.select(Canyon).filter_by(id=id)
     canyon = db.session.scalar(stmt)
@@ -117,7 +126,7 @@ def create_comment(id):
 
 @canyons_bp.route('/<int:id>/comment/<int:comment_id>/', methods=['PUT', 'PATCH'])
 # @jwt_required()
-def edit_comment(id, comment_id):
+def update_comment(id, comment_id):
     stmt = db.select(Comment).filter_by(id=id)
     comment = db.session.scalar(stmt)
 
@@ -128,7 +137,8 @@ def edit_comment(id, comment_id):
     comment = db.session.scalar(stmt)
     data = CommentSchema().load(request.json)
     if comment:
-        comment.messgae = data['message']
-        db.session.commit() # card already in db so don't have to add, just commit changes
+        comment.messgae = data['message'] or comment.message
+        db.session.commit() 
         return CommentSchema().dump(comment)
     return {'error': f'Comment not found with id {id}'}, 404
+

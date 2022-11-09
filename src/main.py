@@ -3,6 +3,7 @@ from init import db, ma, bcrypt, jwt
 from controllers.auth_controller import auth_bp
 from controllers.cli_controller import db_commands
 from controllers.canyon_controller import canyons_bp
+from controllers.user_controller import users_bp
 import os
 
 def create_app():
@@ -29,6 +30,7 @@ def create_app():
     app.register_blueprint(db_commands)
     app.register_blueprint(auth_bp)
     app.register_blueprint(canyons_bp)
+    app.register_blueprint(users_bp)
 
     # Error handling
     @app.errorhandler(404)

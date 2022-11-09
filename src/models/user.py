@@ -18,7 +18,7 @@ class UserSchema(ma.Schema):
     # Validation - name, password, email
     name = fields.String(validate=And(
         Length(min=2, max=50, error='Username must be between 2 and 50 characters long'),
-        Regexp('^[a-zA-Z0-9]+$', error='Username can only contain letters, numbers and spaces')
+        Regexp('^[a-zA-Z0-9]+$', error='Username can only contain letters and numbers')
     ))
 
     password = fields.String(validate=(
