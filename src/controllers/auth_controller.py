@@ -40,9 +40,7 @@ def login_user():
         return {'error': 'Invalid email or password'}, 401
 
 def authorize_user():
-    #Check if a user has admin privileges
-    user_id = get_jwt_identity()
-    stmt = db.select(User).filter_by(id=user_id)
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
     user = db.session.scalar(stmt)
 
     if not user.is_admin:

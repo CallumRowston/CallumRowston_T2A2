@@ -22,7 +22,7 @@ def get_one_canyon(id):
     canyon = db.session.scalar(stmt)
     if canyon:
         return CanyonSchema().dump(canyon)
-    return {'error': f'Canyon not found with id {id}'}, 404
+    return {'Error': f'Canyon not found with id: {id}'}, 404
 
 @canyons_bp.route('/', methods=['POST'])
 @jwt_required()
@@ -50,31 +50,34 @@ def create_canyon():
         db.session.add(canyon)
         db.session.commit()
         return {
-                'message': f'You have added {canyon.name} Canyon successfully',
-                'canyon': CanyonSchema().dump(canyon)
+                'Message': 'Canyon added successfully',
+                'Canyon': CanyonSchema().dump(canyon)
         }
-    else:
-        return {'error': f'You must be logged in to add a canyon'}, 404
+    return {'Error': 'You must be logged in to add a canyon'}, 404
 
-@canyons_bp.route('/<int:id>/', methods=['PUT', 'PATCH'])
+@canyons_bp.route('/<int:id>/update', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_canyon(id):
     authorize_user()
     stmt = db.select(Canyon).filter_by(id=id)
     canyon = db.session.scalar(stmt)
+    data = CanyonSchema().load(request.json, partial=True)
     if canyon:
-        canyon.name = request.json.get('name') or canyon.name
-        canyon.area = request.json.get('area') or canyon.area
-        canyon.description = request.json.get('description') or canyon.description
-        canyon.estimated_time_hrs = request.json.get('estimated_time_hrs') or canyon.estimated_time_hrs
-        canyon.number_abseils = request.json.get('number_abseils') or canyon.number_abseils
-        canyon.longest_abseil = request.json.get('longest_abseil') or canyon.longest_abseil
-        canyon.difficulty = request.json.get('difficulty') or canyon.difficulty
-        canyon.wetsuits_recommended = request.json.get('wetsuits_recommended') or canyon.wetsuits_recommended
-        canyon.last_updated = date.today(),
+        canyon.name = data.get('name') or canyon.name
+        canyon.area = data.get('area') or canyon.area
+        canyon.description = data.get('description') or canyon.description
+        canyon.estimated_time_hrs = data.get('estimated_time_hrs') or canyon.estimated_time_hrs
+        canyon.number_abseils = data.get('number_abseils') or canyon.number_abseils
+        canyon.longest_abseil = data.get('longest_abseil') or canyon.longest_abseil
+        canyon.difficulty = data.get('difficulty') or canyon.difficulty
+        canyon.wetsuits_recommended = data.get('wetsuits_recommended') or canyon.wetsuits_recommended
+        canyon.last_updated = date.today()
         db.session.commit()
-        return CanyonSchema().dump(canyon)
-    return {'error': f'Canyon not found with id: {id}'}, 404
+        return {
+            "Message": f"{canyon.name} Canyon successfully updated",
+            "Canyon": CanyonSchema().dump(canyon)
+        }
+    return {'Error': f'Canyon not found with id: {id}'}, 404
 
 @canyons_bp.route('/<int:id>/', methods=['DELETE'])
 @jwt_required()
@@ -85,8 +88,8 @@ def delete_canyon(id):
     if canyon:
         db.session.delete(canyon)
         db.session.commit()
-        return {'message': f'{canyon.name} Canyon with id: {canyon.id} deleted.'}
-    return {'error': f'Canyon not found with id: {id}'}, 404
+        return {'Message': f'Canyon with id: {id} successfully deleted.'}
+    return {'Error': f'Canyon not found with id: {id}'}, 404
 
 # -------------------------
 # ~~~~~~~ COMMENTS ~~~~~~~~
