@@ -12,8 +12,8 @@ class UserCanyonToDo(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     # Relationships
-    canyon = db.relationship('Canyon', back_populates='user_canyons_todo')
-    user = db.relationship('User', back_populates='user_canyons_todo')
+    # canyon = db.relationship('Canyon', back_populates='user_canyons_todo')
+    # user = db.relationship('User', back_populates='user_canyons_todo')
     
 class UserCanyonToDoSchema(ma.Schema):
 
@@ -21,5 +21,5 @@ class UserCanyonToDoSchema(ma.Schema):
     canyon = fields.Nested('CanyonSchema')
 
     class Meta:
-        fields = ('id', 'date_added', 'canyon', 'user')
+        fields = ('id', 'date_added', 'canyon_id', 'user_id')
         ordered = True

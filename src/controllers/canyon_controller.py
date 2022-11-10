@@ -23,7 +23,7 @@ def get_one_canyon(id):
     canyon = db.session.scalar(stmt)
     if canyon:
         return CanyonSchema().dump(canyon)
-    return {'Error': f'Canyon not found with id: {id}'}, 404
+    return {'error': f'Canyon not found with id {id}'}, 404
 
 @canyons_bp.route('/', methods=['POST'])
 @jwt_required()
@@ -102,16 +102,18 @@ def get_all_comments_from_canyon(id):
     comments = db.session.scalars(stmt)
     return CommentSchema(many=True).dump(comments)
 
-@canyons_bp.route('/<int:id>/comments/int:comment_id')
+@canyons_bp.route('/<int:id>/comments/<int:comment_id>')
 def get_one_comment_from_canyon(id, comment_id):
-    stmt = db.select(Comment).filter_by(canyon_id=id)
+    stmt = db.select(Comment).where(and_(
+        Canyon.id == id,
+        Comment.id == comment_id
+    ))
     comment = db.session.scalar(stmt)
-    stmt = db.select(Canyon).filter_by(canyon_id=id)
-    comment = db.session.scalar(stmt)
-    return CommentSchema().dump(comment)
+    if comment:
+        return CommentSchema().dump(comment)
+    return {'Error': f'Comment not found with id {comment_id}'}, 404
 
-
-@canyons_bp.route('/<int:id>/comment/', methods=['POST'])
+@canyons_bp.route('/<int:id>/comments/', methods=['POST'])
 @jwt_required()
 def create_comment(id):
     stmt = db.select(Canyon).filter_by(id=id)
@@ -126,13 +128,13 @@ def create_comment(id):
         db.session.add(comment)
         db.session.commit()
         return CommentSchema().dump(comment)
-    return {'error': f'canyon not found with id {id}'}, 404
+    return {'Error': f'Canyon not found with id {id}'}, 404
 
-@canyons_bp.route('/<int:id>/comment/<int:comment_id>/', methods=['PUT', 'PATCH'])
-# @jwt_required()
-def update_comment(id, comment_id):
-    stmt = db.select(Comment).filter_by(id=id)
-    comment = db.session.scalar(stmt)
+@canyons_bp.route('/comments/<int:comment_id>/', methods=['PUT', 'PATCH'])
+@jwt_required()
+def update_comment(comment_id):
+    # stmt = db.select(Comment).filter_by(id=comment_id)
+    # comment = db.session.scalar(stmt)
 
     stmt = db.select(Comment).where(and_(
         Comment.id == comment_id,
@@ -144,22 +146,65 @@ def update_comment(id, comment_id):
         comment.messgae = data['message'] or comment.message
         db.session.commit() 
         return CommentSchema().dump(comment)
-    return {'error': f'Comment not found with id {id}'}, 404
+    return {'Error': f'Comment not found with id {comment_id}'}, 404
+
+    # stmt = db.select(Comment).filter_by(id=id)
+    # comment = db.session.scalar(stmt)
+
+    # stmt = db.select(Comment).where(and_(
+    #     Comment.id == comment_id,
+    #     Comment.user_id == get_jwt_identity()
+    # ))
+    # comment = db.session.scalar(stmt)
+    # data = CommentSchema().load(request.json)
+    # if comment:
+    #     comment.messgae = data['message'] or comment.message
+    #     db.session.commit() 
+    #     return CommentSchema().dump(comment)
+    # return {'Error': f'Comment not found with id {comment_id}'}, 404
+
+@canyons_bp.route('/<int:id>/comments/<int:comment_id>/', methods=['DELETE'])
+@jwt_required()
+def delete_comment(id, comment_id):
+    # stmt = db.select(Comment).filter_by(id=id)
+    # comment = db.session.scalar(stmt)
+
+    stmt = db.select(Comment).where(and_(
+        Canyon.id == id,
+        Comment.id == comment_id,
+        Comment.user_id == get_jwt_identity()
+    ))
+    comment = db.session.scalar(stmt)
+    if comment:
+        db.session.delete(comment)
+        db.session.commit()
+        return {'Message': f'Comment with id: {comment_id} successfully deleted'}
+    return {'Error': f'Comment not found with id {comment_id}'}, 404
 
 # --------------------------------------------
 # ~~~~~~~ To Do and Completed Canyons ~~~~~~~~
 # --------------------------------------------
 
-@users_bp.route('/<int:id>/add_to_do', methods=['POST'])
+@canyons_bp.route('/<int:id>/add_to_do', methods=['POST'])
 @jwt_required()
 def add_canyon_todo(id):
     stmt = db.select(Canyon).filter_by(id=id)
     canyon = db.session.scalar(stmt)
 
-    stmt = db.select(User).filter_by(id=get_jwt_identity)
-    user = db.session.scalar(stmt)
+    # stmt = db.select(User).filter_by(id=get_jwt_identity)
+    # user = db.session.scalar(stmt)
 
-    data = UserCanyonToDoSchema().load(request.json)
+    # data = UserCanyonToDoSchema().load(request.json)
+    if canyon:
+        to_do = UserCanyonToDo(
+            date_added = date.today(),
+            canyon_id = id,
+            user_id = get_jwt_identity()
+        )
+        db.session.add(to_do)
+        db.session.commit()
+        return UserCanyonToDoSchema().dump(to_do)
 
 def add_canyon_completed():
     pass
+

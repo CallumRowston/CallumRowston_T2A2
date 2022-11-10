@@ -18,9 +18,9 @@ class Comment(db.Model):
     
 class CommentSchema(ma.Schema):
 
-    user = fields.Nested('UserSchema', only=['name', 'email'])
+    user = fields.Nested('UserSchema', only=['name'])
     canyon = fields.Nested('CanyonSchema')
 
     class Meta:
-        fields = ('id', 'message', 'date_posted')
+        fields = ('id', 'message', 'date_posted', 'canyon_id', 'user')
         ordered = True

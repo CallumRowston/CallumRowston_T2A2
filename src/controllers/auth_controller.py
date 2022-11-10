@@ -44,4 +44,4 @@ def authorize_user():
     user = db.session.scalar(stmt)
 
     if not user.is_admin:
-        abort(401, description='Access denied. You are not an administrator')
+        abort(401, description='You must be an administrator to do that')

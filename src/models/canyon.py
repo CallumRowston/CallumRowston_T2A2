@@ -21,6 +21,7 @@ class Canyon(db.Model):
     # Relationships
     user = db.relationship('User', back_populates='canyons')
     comments = db.relationship('Comment', back_populates='canyon', cascade='all, delete')
+    # to_do = db.relationship('UserCanyonToDo', back_populates='canyon', cascade='all, delete')
 
 class CanyonSchema(ma.Schema):
 
@@ -31,5 +32,5 @@ class CanyonSchema(ma.Schema):
     comments = fields.List(fields.Nested('CommentSchema', exclude=['canyon']))
 
     class Meta:
-        fields = ('id', 'name', 'area', 'description', 'estimated_time_hrs', 'number_abseils', 'longest_abseil', 'difficulty', 'wetsuits_recommended', 'last_updated')
+        fields = ('id', 'name', 'area', 'description', 'estimated_time_hrs', 'number_abseils', 'longest_abseil', 'difficulty', 'wetsuits_recommended', 'last_updated', 'user', 'comments')
         ordered = True

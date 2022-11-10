@@ -3,6 +3,8 @@ from init import db, bcrypt
 from datetime import date, timedelta
 from models.user import User, UserSchema
 from models.canyon import Canyon, CanyonSchema
+from models.comment import Comment, CommentSchema
+from models.user_canyon_todo import UserCanyonToDo, UserCanyonToDoSchema
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
@@ -41,10 +43,22 @@ def update_user():
         }
     return {'error': f'User not found with id {id}'}, 404
 
+@users_bp.route('/<int:id>/comments/')
+def get_all_comments_from_user(id):
+    stmt = db.select(Comment).filter_by(id=id)
+    comments = db.session.scalars(stmt)
+    if comments:
+        return CommentSchema().dump(comments)
+    return {'Error': f'User not found with id {id}'}, 404
 
-
-def get_user_todo_canyons():
-    pass
+@users_bp.route('/<int:id>/to_do')
+@jwt_required()
+def get_user_todo_canyons(id):
+    stmt = db.select(UserCanyonToDo).filter_by(id=id)
+    canyons = db.session.scalars(stmt)
+    return UserCanyonToDoSchema(many=True).dump(canyons)
 
 def get_user_completed_canyons():
     pass
+
+

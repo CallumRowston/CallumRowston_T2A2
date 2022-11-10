@@ -4,6 +4,7 @@ from datetime import date, datetime
 from models.user import User
 from models.canyon import Canyon
 from models.comment import Comment
+from models.user_canyon_todo import UserCanyonToDo
 
 db_commands = Blueprint('db', __name__)
 
@@ -52,7 +53,7 @@ def seed_db():
             difficulty = 'Medium',
             wetsuits_recommended = False,
             last_updated = datetime.now(),
-            user = users[1]
+            user = users[0]
         ),
         Canyon(
             name = 'Firefly',
@@ -64,7 +65,7 @@ def seed_db():
             difficulty = 'Medium',
             wetsuits_recommended = True,
             last_updated = datetime.now(),
-            user = users[1]
+            user = users[0]
         ),
         Canyon(
             name = 'Rocky Creek',
@@ -76,7 +77,7 @@ def seed_db():
             difficulty = 'Easy',
             wetsuits_recommended = True,
             last_updated = datetime.now(),
-            user = users[1]
+            user = users[0]
         ),
         Canyon(
             name = 'Twister',
@@ -88,7 +89,7 @@ def seed_db():
             difficulty = 'Easy',
             wetsuits_recommended = True,
             last_updated = datetime.now(),
-            user = users[1]
+            user = users[0]
         ),
         Canyon(
             name = 'Tiger Snake',
@@ -100,7 +101,7 @@ def seed_db():
             difficulty = 'Easy-Medium',
             wetsuits_recommended = False,
             last_updated = datetime.now(),
-            user = users[1]
+            user = users[0]
         ),
         Canyon(
             name = 'Whungee Wheengee',
@@ -112,7 +113,7 @@ def seed_db():
             difficulty = 'Medium-Hard',
             wetsuits_recommended = True,
             last_updated = datetime.now(),
-            user = users[1]
+            user = users[0]
         ),
         Canyon(
             name = 'Claustral',
@@ -124,7 +125,7 @@ def seed_db():
             difficulty = 'Medium',
             wetsuits_recommended = True,
             last_updated = datetime.now(),
-            user = users[1]
+            user = users[0]
         )
     ]
 
@@ -136,7 +137,7 @@ def seed_db():
             message = 'A test comment by the CanyonAdministrator',
             date_posted = date.today(),
             canyon = canyons[1],
-            user = users[1]
+            user = users[0]
         ),
         Comment(
             message = 'A second test comment on the same canyon',
@@ -144,8 +145,48 @@ def seed_db():
             canyon = canyons[1],
             user = users[2]
         ),
+        Comment(
+            message = 'Our group did this on 2/4/22 and finding the entrance quite difficult. ',
+            date_posted = date.today(),
+            canyon = canyons[0],
+            user = users[2]
+        ),
+        Comment(
+            message = 'When you exit the main constriction, keep as high and left as possible to avoid the boulder field until you reach the main river',
+            date_posted = date.today(),
+            canyon = canyons[0],
+            user = users[1]
+        ),
+        Comment(
+            message = 'After the rain last week multiple routes are full submerged and our group found a fair bit of debris in them so opted to scramble and abseil over the top',
+            date_posted = date.today(),
+            canyon = canyons[5],
+            user = users[2]
+        )
     ]
 
-    print("Tables seeded")
     db.session.add_all(comments)
     db.session.commit()
+
+    user_canyons_todo = [
+        UserCanyonToDo(
+            date_added = date.today(),
+            canyon_id = 3,
+            user_id = 1
+        ),
+        UserCanyonToDo(
+            date_added = date.today(),
+            canyon_id = 4,
+            user_id = 1
+        ),
+        UserCanyonToDo(
+            date_added = date.today(),
+            canyon_id = 4,
+            user_id = 2
+        ),
+    ]
+
+    
+    db.session.add_all(user_canyons_todo)
+    db.session.commit()
+    print("Tables seeded")
