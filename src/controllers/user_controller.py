@@ -2,6 +2,7 @@ from flask import Blueprint, request, abort
 from init import db, bcrypt
 from datetime import date, timedelta
 from models.user import User, UserSchema
+from models.canyon import Canyon, CanyonSchema
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
@@ -39,6 +40,8 @@ def update_user():
             "User": UserSchema(exclude=['password']).dump(user)
         }
     return {'error': f'User not found with id {id}'}, 404
+
+
 
 def get_user_todo_canyons():
     pass

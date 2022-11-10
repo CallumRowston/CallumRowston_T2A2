@@ -6,6 +6,7 @@ from sqlalchemy import and_
 from models.canyon import Canyon, CanyonSchema
 from models.user import User, UserSchema
 from models.comment import Comment, CommentSchema
+from models.user_canyon_todo import UserCanyonToDo, UserCanyonToDoSchema
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 canyons_bp = Blueprint('canyons', __name__, url_prefix='/canyons')
@@ -145,3 +146,20 @@ def update_comment(id, comment_id):
         return CommentSchema().dump(comment)
     return {'error': f'Comment not found with id {id}'}, 404
 
+# --------------------------------------------
+# ~~~~~~~ To Do and Completed Canyons ~~~~~~~~
+# --------------------------------------------
+
+@users_bp.route('/<int:id>/add_to_do', methods=['POST'])
+@jwt_required()
+def add_canyon_todo(id):
+    stmt = db.select(Canyon).filter_by(id=id)
+    canyon = db.session.scalar(stmt)
+
+    stmt = db.select(User).filter_by(id=get_jwt_identity)
+    user = db.session.scalar(stmt)
+
+    data = UserCanyonToDoSchema().load(request.json)
+
+def add_canyon_completed():
+    pass
