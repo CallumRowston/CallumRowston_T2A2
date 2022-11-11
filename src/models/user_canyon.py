@@ -16,8 +16,8 @@ class UserCanyon(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     # Relationships
-    # canyon = db.relationship('Canyon', back_populates='user_canyons_todo')
-    # user = db.relationship('User', back_populates='user_canyons_todo')
+    # canyon = db.relationship('Canyon', back_populates='user_canyons')
+    # user = db.relationship('User', back_populates='user_canyons')
     
 class UserCanyonSchema(ma.Schema):
 

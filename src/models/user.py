@@ -27,7 +27,9 @@ class UserSchema(ma.Schema):
         error='Password must contain at least eight characters, at least one uppercase letter, one lowercase letter and one number:')
     ))
 
+    # Exclude user from canyon field
     canyons = fields.List(fields.Nested('CanyonSchema', exclude=['user']))
+    # Exclude user form comment field
     comments = fields.List(fields.Nested('CommentSchema', exclude=['user']))
 
     class Meta:

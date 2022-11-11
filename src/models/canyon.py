@@ -24,19 +24,16 @@ class Canyon(db.Model):
     # Relationships
     user = db.relationship('User', back_populates='canyons')
     comments = db.relationship('Comment', back_populates='canyon', cascade='all, delete')
-    # to_do = db.relationship('UserCanyonToDo', back_populates='canyon', cascade='all, delete')
+    # to_do = db.relationship('UserCanyon', back_populates='canyon', cascade='all, delete')
 
 class CanyonSchema(ma.Schema):
 
     # Validation
     difficulty = fields.String(validate=OneOf(VALID_DIFFICULTIES, error=f'Difficulty must be one of: {VALID_DIFFICULTIES}'))
 
-    # @validates('difficulty')
-    # def validate_status(self, value):
-    #     if value not in VALID_DIFFICULTIES:
-    #         raise ValidationError('Invalid Difficulty')
-
+    # Only display username in user field
     user = fields.Nested('UserSchema', only=['name'])
+    # Exclude canyon from comment
     comments = fields.List(fields.Nested('CommentSchema', exclude=['canyon']))
 
     class Meta:

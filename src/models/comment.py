@@ -18,7 +18,9 @@ class Comment(db.Model):
     
 class CommentSchema(ma.Schema):
 
+    # Only display username in user field
     user = fields.Nested('UserSchema', only=['name'])
+    # Display entire canyon field
     canyon = fields.Nested('CanyonSchema')
 
     class Meta:
