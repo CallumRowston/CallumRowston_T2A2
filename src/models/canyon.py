@@ -1,5 +1,8 @@
 from init import db, ma
 from marshmallow import fields
+from marshmallow.validate import Length, And, Regexp, OneOf
+
+VALID_DIFFICULTIES = ('Easy', 'Medium', 'Hard')
 
 class Canyon(db.Model):
     __tablename__ = 'canyons'
@@ -26,9 +29,10 @@ class Canyon(db.Model):
 class CanyonSchema(ma.Schema):
 
     # Validation
+    difficulty = fields.String(validate=OneOf(VALID_DIFFICULTIES, error=f'Difficulty must be one of: {VALID_DIFFICULTIES}'))
 
 
-    user = fields.Nested('UserSchema', only=['name', 'email'])
+    user = fields.Nested('UserSchema', only=['name'])
     comments = fields.List(fields.Nested('CommentSchema', exclude=['canyon']))
 
     class Meta:

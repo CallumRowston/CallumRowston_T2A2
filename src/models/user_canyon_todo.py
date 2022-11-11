@@ -1,11 +1,15 @@
 from init import db, ma
 from marshmallow import fields
+from marshmallow.validate import Length, And, Regexp, OneOf
+
+VALID_TAGS = ('To Do', 'Completed')
 
 class UserCanyonToDo(db.Model):
     __tablename__ = 'user_canyons_todo'
 
     id = db.Column(db.Integer, primary_key=True)
     date_added = db.Column(db.Date)
+    tag = db.Column(db.String, nullable=False)
 
     # Foreign Keys
     canyon_id = db.Column(db.Integer, db.ForeignKey('canyons.id'), nullable=False)
@@ -17,9 +21,11 @@ class UserCanyonToDo(db.Model):
     
 class UserCanyonToDoSchema(ma.Schema):
 
-    user = fields.Nested('UserSchema', only=['name', 'email'])
-    canyon = fields.Nested('CanyonSchema')
+    tag = fields.String(validate=OneOf(VALID_TAGS, error=f'Difficulty must be one of: {VALID_TAGS}'))
+
+    user = fields.Nested('UserSchema', only=['id'])
+    canyon = fields.Nested('CanyonSchema', only=['id'])
 
     class Meta:
-        fields = ('id', 'date_added', 'canyon_id', 'user_id')
+        fields = ('id', 'date_added', 'tag', 'canyon_id', 'user_id')
         ordered = True

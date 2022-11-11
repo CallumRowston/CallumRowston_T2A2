@@ -171,19 +171,40 @@ def seed_db():
     user_canyons_todo = [
         UserCanyonToDo(
             date_added = date.today(),
+            tag = 'To Do',
             canyon_id = 3,
             user_id = 1
         ),
         UserCanyonToDo(
             date_added = date.today(),
+            tag = 'To Do',
             canyon_id = 4,
             user_id = 1
         ),
         UserCanyonToDo(
             date_added = date.today(),
+            tag = 'Completed',
             canyon_id = 4,
             user_id = 2
         ),
+        UserCanyonToDo(
+            date_added = date.today(),
+            tag = 'Completed',
+            canyon_id = 5,
+            user_id = 2
+        ),
+        UserCanyonToDo(
+            date_added = date.today(),
+            tag = 'To Do',
+            canyon_id = 6,
+            user_id = 2
+        ),
+        UserCanyonToDo(
+            date_added = date.today(),
+            tag = 'To Do',
+            canyon_id = 2,
+            user_id = 3
+        )
     ]
 
     

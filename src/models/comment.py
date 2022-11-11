@@ -22,5 +22,5 @@ class CommentSchema(ma.Schema):
     canyon = fields.Nested('CanyonSchema')
 
     class Meta:
-        fields = ('id', 'message', 'date_posted', 'canyon_id', 'user')
+        fields = ('id', 'message', 'date_posted', 'canyon', 'user')
         ordered = True

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, abort
 from init import db, bcrypt
 from datetime import date, timedelta
+from sqlalchemy import and_
 from models.user import User, UserSchema
 from models.canyon import Canyon, CanyonSchema
 from models.comment import Comment, CommentSchema
@@ -54,11 +55,25 @@ def get_all_comments_from_user(id):
 @users_bp.route('/<int:id>/to_do')
 @jwt_required()
 def get_user_todo_canyons(id):
-    stmt = db.select(UserCanyonToDo).filter_by(id=id)
+    # stmt = db.select(UserCanyonToDo).filter_by(id=get_jwt_identity)
+    # canyons = db.session.scalars(stmt)
+    # stmt = db.select(User).filter_by(id=id)
+    # user = db.session.scalars(stmt)
+    stmt = db.select(UserCanyonToDo).where(and_(
+        UserCanyonToDo.user_id == id,
+        UserCanyonToDo.tag == 'To Do'
+    ))
     canyons = db.session.scalars(stmt)
     return UserCanyonToDoSchema(many=True).dump(canyons)
 
-def get_user_completed_canyons():
-    pass
+@users_bp.route('/<int:id>/completed')
+@jwt_required()
+def get_user_completed_canyons(id):
+    stmt = db.select(UserCanyonToDo).where(and_(
+        UserCanyonToDo.user_id == id,
+        UserCanyonToDo.tag == 'Completed'
+    ))
+    canyons = db.session.scalars(stmt)
+    return UserCanyonToDoSchema(many=True).dump(canyons)
 
 
