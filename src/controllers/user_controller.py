@@ -1,10 +1,7 @@
-from flask import Blueprint, request, abort
+from flask import Blueprint, request
 from init import db, bcrypt
-from datetime import date, timedelta
-from sqlalchemy import and_
 from models.user import User, UserSchema
-from models.canyon import Canyon, CanyonSchema
-from models.comment import Comment, CommentSchema
+from controllers.auth_controller import authorize_user
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
@@ -12,26 +9,34 @@ users_bp = Blueprint('users', __name__, url_prefix='/users')
 @users_bp.route('/')
 @jwt_required()
 def get_all_users():
+    # Allows an admin to access all user details, excluding passwords
+    authorize_user()
     stmt = db.select(User).order_by(User.id)
     users = db.session.scalars(stmt)
+    print(type(UserSchema))
     return UserSchema(many=True, exclude=['password']).dump(users)
 
 @users_bp.route('/<int:id>/')
 @jwt_required()
 def get_one_user(id):
+    # Allows a user to get another user details, excluding password and email for privacy
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
+
     if user:
-        return UserSchema(exclude=['password']).dump(user)
+        return UserSchema(exclude=['password', 'email']).dump(user)
+
     return {'error': f'User not found with id {id}'}, 404
 
 @users_bp.route('/update/', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_user():
+    # Allows a user to update their own username, email or password
     stmt = db.select(User).filter_by(id=get_jwt_identity())
     user = db.session.scalar(stmt)
 
     data =  UserSchema().load(request.json, partial=True)
+
     if user:
         user.name = data.get('name') or user.name
         user.email = data.get('email') or user.email
@@ -43,6 +48,3 @@ def update_user():
             "User": UserSchema(exclude=['password']).dump(user)
         }
     return {'error': f'User not found with id {id}'}, 404
-
-
-
