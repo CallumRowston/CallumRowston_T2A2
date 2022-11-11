@@ -35,9 +35,9 @@ def get_canyons_difficulty(difficulty):
 @jwt_required()
 def create_canyon():
     authorize_user()
-    data = CanyonSchema().load(request.json)
+    data = CanyonSchema().load(request.json, partial=True)
 
-    stmt = db.select(User).filter_by(id=get_jwt_identity)
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
     user = db.session.scalar(stmt)
 
     if user:
@@ -122,11 +122,12 @@ def get_one_comment_from_canyon(id, comment_id):
 @canyons_bp.route('/<int:id>/comments/', methods=['POST'])
 @jwt_required()
 def create_comment(id):
+    data = CommentSchema().load(request.json)
     stmt = db.select(Canyon).filter_by(id=id)
     canyon = db.session.scalar(stmt)
     if canyon:
         comment = Comment(
-                message = request.json['message'],
+                message = data['message'],
                 date_posted = date.today(),
                 canyon_id = id,
                 user_id = get_jwt_identity()
@@ -144,18 +145,17 @@ def update_comment(comment_id):
         Comment.user_id == get_jwt_identity()
     ))
     comment = db.session.scalar(stmt)
-    data = CommentSchema().load(request.json)
+    data = CommentSchema().load(request.json, partial=True)
     if comment:
-        comment.messgae = data['message'] or comment.message
-        db.session.commit() 
+        comment.message = data.get('message') or comment.message
+        db.session.commit()
         return CommentSchema().dump(comment)
     return {'Error': f'Comment not found with id {comment_id}'}, 404
 
-@canyons_bp.route('/<int:id>/comments/<int:comment_id>/', methods=['DELETE'])
+@canyons_bp.route('/comments/<int:comment_id>/', methods=['DELETE'])
 @jwt_required()
-def delete_comment(id, comment_id):
+def delete_comment(comment_id):
     stmt = db.select(Comment).where(and_(
-        Canyon.id == id,
         Comment.id == comment_id,
         Comment.user_id == get_jwt_identity()
     ))

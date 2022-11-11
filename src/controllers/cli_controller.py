@@ -98,7 +98,7 @@ def seed_db():
             estimated_time_hrs = 7,
             number_abseils = 5,
             longest_abseil = '25m',
-            difficulty = 'Easy-Medium',
+            difficulty = 'Medium',
             wetsuits_recommended = False,
             last_updated = datetime.now(),
             user = users[0]
@@ -110,7 +110,7 @@ def seed_db():
             estimated_time_hrs = 10,
             number_abseils = 6,
             longest_abseil = '15m',
-            difficulty = 'Medium-Hard',
+            difficulty = 'Hard',
             wetsuits_recommended = True,
             last_updated = datetime.now(),
             user = users[0]

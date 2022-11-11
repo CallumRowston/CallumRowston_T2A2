@@ -31,6 +31,10 @@ class CanyonSchema(ma.Schema):
     # Validation
     difficulty = fields.String(validate=OneOf(VALID_DIFFICULTIES, error=f'Difficulty must be one of: {VALID_DIFFICULTIES}'))
 
+    # @validates('difficulty')
+    # def validate_status(self, value):
+    #     if value not in VALID_DIFFICULTIES:
+    #         raise ValidationError('Invalid Difficulty')
 
     user = fields.Nested('UserSchema', only=['name'])
     comments = fields.List(fields.Nested('CommentSchema', exclude=['canyon']))
