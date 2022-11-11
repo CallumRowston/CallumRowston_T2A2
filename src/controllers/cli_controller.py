@@ -4,7 +4,7 @@ from datetime import date, datetime
 from models.user import User
 from models.canyon import Canyon
 from models.comment import Comment
-from models.user_canyon import UserCanyonToDo
+from models.user_canyon import UserCanyon
 
 db_commands = Blueprint('db', __name__)
 
@@ -168,38 +168,38 @@ def seed_db():
     db.session.add_all(comments)
     db.session.commit()
 
-    user_canyons_todo = [
-        UserCanyonToDo(
+    user_canyons = [
+        UserCanyon(
             date_added = date.today(),
             tag = 'To Do',
             canyon_id = 3,
             user_id = 1
         ),
-        UserCanyonToDo(
+        UserCanyon(
             date_added = date.today(),
             tag = 'To Do',
             canyon_id = 4,
             user_id = 1
         ),
-        UserCanyonToDo(
+        UserCanyon(
             date_added = date.today(),
             tag = 'Completed',
             canyon_id = 4,
             user_id = 2
         ),
-        UserCanyonToDo(
+        UserCanyon(
             date_added = date.today(),
             tag = 'Completed',
             canyon_id = 5,
             user_id = 2
         ),
-        UserCanyonToDo(
+        UserCanyon(
             date_added = date.today(),
             tag = 'To Do',
             canyon_id = 6,
             user_id = 2
         ),
-        UserCanyonToDo(
+        UserCanyon(
             date_added = date.today(),
             tag = 'To Do',
             canyon_id = 2,
@@ -208,6 +208,6 @@ def seed_db():
     ]
 
     
-    db.session.add_all(user_canyons_todo)
+    db.session.add_all(user_canyons)
     db.session.commit()
     print("Tables seeded")

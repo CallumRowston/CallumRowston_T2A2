@@ -38,7 +38,7 @@ def get_canyons_difficulty(difficulty):
                     'Message': f'All {difficulty} canyons successfully found',
                     'Canyon': CanyonSchema(many=True).dump(canyons)
             }
-    return {'Error': f'No canyons found of difficulty: {difficulty}'}, 404
+    return {'Error': f'No canyons found with difficulty: {difficulty}'}, 404
 
 @canyons_bp.route('/', methods=['POST'])
 @jwt_required()
