@@ -5,12 +5,12 @@ from sqlalchemy import and_
 from models.user import User, UserSchema
 from models.canyon import Canyon, CanyonSchema
 from models.comment import Comment, CommentSchema
-from models.user_canyon_todo import UserCanyonToDo, UserCanyonToDoSchema
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 @users_bp.route('/')
+@jwt_required()
 def get_all_users():
     stmt = db.select(User).order_by(User.id)
     users = db.session.scalars(stmt)
@@ -44,36 +44,5 @@ def update_user():
         }
     return {'error': f'User not found with id {id}'}, 404
 
-@users_bp.route('/<int:id>/comments/')
-def get_all_comments_from_user(id):
-    stmt = db.select(Comment).filter_by(id=id)
-    comments = db.session.scalars(stmt)
-    if comments:
-        return CommentSchema().dump(comments)
-    return {'Error': f'User not found with id {id}'}, 404
-
-@users_bp.route('/<int:id>/to_do')
-@jwt_required()
-def get_user_todo_canyons(id):
-    # stmt = db.select(UserCanyonToDo).filter_by(id=get_jwt_identity)
-    # canyons = db.session.scalars(stmt)
-    # stmt = db.select(User).filter_by(id=id)
-    # user = db.session.scalars(stmt)
-    stmt = db.select(UserCanyonToDo).where(and_(
-        UserCanyonToDo.user_id == id,
-        UserCanyonToDo.tag == 'To Do'
-    ))
-    canyons = db.session.scalars(stmt)
-    return UserCanyonToDoSchema(many=True).dump(canyons)
-
-@users_bp.route('/<int:id>/completed')
-@jwt_required()
-def get_user_completed_canyons(id):
-    stmt = db.select(UserCanyonToDo).where(and_(
-        UserCanyonToDo.user_id == id,
-        UserCanyonToDo.tag == 'Completed'
-    ))
-    canyons = db.session.scalars(stmt)
-    return UserCanyonToDoSchema(many=True).dump(canyons)
 
 

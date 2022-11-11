@@ -4,8 +4,8 @@ from marshmallow.validate import Length, And, Regexp, OneOf
 
 VALID_TAGS = ('To Do', 'Completed')
 
-class UserCanyonToDo(db.Model):
-    __tablename__ = 'user_canyons_todo'
+class UserCanyon(db.Model):
+    __tablename__ = 'user_canyons'
 
     id = db.Column(db.Integer, primary_key=True)
     date_added = db.Column(db.Date)
@@ -19,7 +19,7 @@ class UserCanyonToDo(db.Model):
     # canyon = db.relationship('Canyon', back_populates='user_canyons_todo')
     # user = db.relationship('User', back_populates='user_canyons_todo')
     
-class UserCanyonToDoSchema(ma.Schema):
+class UserCanyonSchema(ma.Schema):
 
     tag = fields.String(validate=OneOf(VALID_TAGS, error=f'Difficulty must be one of: {VALID_TAGS}'))
 

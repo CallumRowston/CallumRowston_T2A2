@@ -4,7 +4,7 @@ from datetime import date, datetime
 from models.user import User
 from models.canyon import Canyon
 from models.comment import Comment
-from models.user_canyon_todo import UserCanyonToDo
+from models.user_canyon import UserCanyonToDo
 
 db_commands = Blueprint('db', __name__)
 
