@@ -71,6 +71,40 @@ However, some drawbacks of using PostgreSQL include:
 ## R4 
 ### **Identify and discuss the key functionalities and benefits of an ORM**
 
+An Object Relational Mapper (ORM) is a library of code that turns data from a relational database table into objects that can be used by code.
+
+The core functionality of an ORM is it's ability to map data to objects. Each record in a database table is converted to an instance of a class or object, where each column of the table maps to an attribute of the class. This abstraction of the data allows a developer to use their preferred programming language to interact with this object directly instead  of querying the database using SQL statements. This can speed up development as the developer does not have to switch between languages. It also means a different RDBMS can be used at different points throught development and even in production with little changes to the codebase if required (although it is not generally recommended if it can be avoided as errors can still occur).
+
+(4)
+
+Below is an example of an SQL query and the same query written in Python with SQLAlchemy as the ORM:
+
+SQL:
+
+```SQL
+SELECT *
+FROM usercanyons
+WHERE user_id = '1' AND tag = 'Completed';
+```
+
+Python:
+
+```py
+stmt = db.select(UserCanyon).where(and_(
+  UserCanyon.user_id == user_id, 
+  UserCanyon.tag == 'Completed'
+))
+canyons = db.session.scalars(stmt)
+```
+
+By having the database mapped to Python classes, the way data is structured in the application is clearer and it allows for other developers to more easily understand the code and increases maintainability of the codebase. Having data as objects also allows for the developer to easily check data types of objects and troubleshoot code.
+
+(4,5,6)
+
+Another benefit of ORMs is they provide some but not complete protection from SQL injection by sanitising data. However, direct SQL queries executed with a programming language are not filtered in this way and could still provide an avenue for malicious attacks.
+
+(5,6)
+
 ---
 
 ## R5 
@@ -169,7 +203,7 @@ The UserCanyon model also has the same relationships as the Comment model, where
 
 The entities shown in the ERD in [R6](#r6) each represent a table in the database. These tables are User table, Canyon table, Comment table and UserCanyon table.
 
-Relationships between these tables are formed by the primary key of one table existing as a foreign key in another table. This normalises the data by removing any redunancnies and duplicated data between tables, such that each table contains data about that entity and any data from another table can be linked via its id and foreign key. For example, the primary key of the User table is 'id' and this appears as a foreign key in the Canyon table. This relation means when a row is created in the Canyon table, the id of the user that created that row will be inserted as a 'user_id' in the Canyon table. This relation also means that if the same User were to be deleted from the User table, the row in the Canyon table with that users id will also be deleted, as a Canyon must have a user that created it.
+Relationships between these tables are formed by the primary key of one table existing as a foreign key in another table. This normalises the data by removing any redunancnies and duplicated data between tables, such that each table contains data about that entity and any data from another table can be linked via its id and foreign key. For example, the primary key of the User table is 'id' and this appears as a foreign key in the Canyon table. This relation means when a row is created in the Canyon table, the id of the user that created that row will be inserted as a 'user_id' in the Canyon table. This relation also means that if the same User were to be deleted from the User table, the row in the Canyon table with that user's id will also be deleted, as a Canyon must have a User that created it.
 
 The specific relationships shown in [R6](#r6) are:
 
@@ -206,3 +240,9 @@ The Trello board can be found [here](https://trello.com/b/R4psmhnY/t2a2-api-webs
 2. https://www.prisma.io/dataguide/postgresql/benefits-of-postgresql
 
 3. https://www.cybertec-postgresql.com/en/postgresql-overview/advantages-of-postgresql/
+
+4. https://www.fullstackpython.com/object-relational-mappers-orms.html
+   
+5. https://dev.to/tinazhouhui/introduction-to-object-relational-mapping-the-what-why-when-and-how-of-orm-nb2
+
+6. https://blog.yellowant.com/orm-rethinking-data-as-objects-8ddaa43b1410
