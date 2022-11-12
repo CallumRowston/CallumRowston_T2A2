@@ -113,7 +113,7 @@
 
 ### User Routes
 
-#### **Route: /users**
+#### **Route: /users/**
 
 - Request Verb: GET
 - Function: Returns all users
