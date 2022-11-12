@@ -24,7 +24,7 @@ class Canyon(db.Model):
     # Relationships
     user = db.relationship('User', back_populates='canyons')
     comments = db.relationship('Comment', back_populates='canyon', cascade='all, delete')
-    user_canyons = db.relationship('UserCanyon', cascade='all, delete')
+    user_canyons = db.relationship('UserCanyon' , back_populates='canyon', cascade='all, delete')
 
 class CanyonSchema(ma.Schema):
 

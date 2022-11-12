@@ -42,8 +42,7 @@ Canyoning can be a dangerous and even fatal adventure pursuit without correct in
 ## R3 
 ### **Why have you chosen this database system. What are the drawbacks compared to others?**
 
-The chosen database system for this project is PostgreSQL, a Relational Database Management System (RDBMS) using Structured Query Language (SQL) to access it. This type of database system stores data in tables with rows and columns, and uses SQL to query the database. NoSQL is the alternative to an RDBMS and stores data in JSON format. 
-
+The chosen database system for this project is PostgreSQL, a Relational Database Management System (RDBMS) using Structured Query Language (SQL) to access it. This type of database system stores data in tables with rows and columns, and uses SQL to query the database. NoSQL is the alternative to an RDBMS and stores data in JSON format.
 
 
 ---
@@ -80,18 +79,84 @@ The chosen database system for this project is PostgreSQL, a Relational Database
 ## R8 
 ### **Describe your projects models in terms of the relationships they have with each other**
 
-- User Model
-- Canyon Model
-- Comment Model
+This API has 4 SQLAlchemy models that each represent an entity from the ERD in [R6](#r6). These models are created from the SQLAlchemy baseclass 'db.Model'. Each model then has it's own attributes added to this baseclass. These attributes are also shown in the ERD.
+
+The SQLAlchemy models and their relationships are:
+
+#### **User Model**
+
+The User model is the only model without a foreign key. A User can exist by itself, but all other models require a User id as a foreign key. The User model has access to data form other models via its relationships shown here:
+
+```py
+canyons = db.relationship('Canyon', back_populates='user', cascade='all, delete')
+comments = db.relationship('Comment', back_populates='user', cascade='all, delete')
+user_canyons = db.relationship('UserCanyon', back_populates='user', cascade='all, delete')
+```
+
+By setting ```back_populates='user'```, a virtual column is created in the corresponding model in the realtionship. This means that there is a link back to the User model within the Canyon, Comment and UserCanyon model. Cascade delete means when a user is deleted, its related canyons, comments and user_canyons are also deleted, as these must all be associated with a user.
+
+#### **Canyon Model**
+
+The Canyon model has a foreign key attribute ```'user_id'``` which references the user that created the Canyon object, as seen below:
+
+```py
+user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+```
+
+This foreign key attribute must exist for the Canyon object to exist.
+The Canyon object has relationships with Users, Comments and UserCanyons:
+
+```py
+user = db.relationship('User', back_populates='canyons')
+comments = db.relationship('Comment', back_populates='canyon', cascade='all, delete')
+user_canyons = db.relationship('UserCanyon' , back_populates='canyon', cascade='all, delete')
+```
+
+As with the User model, ```back_populates``` means that the Canyon model can be used in the other models with an established relationship. In the case of the User relationship, ```back_populates='canyons'``` is plural as a User can be associated with many canyons. However a Comment and a UserCanyon can only be associated with one canyon, thus those ```back_populates``` values are singular.
+
+#### **Comment Model**
+
+The comment model has two foreign key attributes; ```user_id``` and ```canyon_id```.
+
+```py
+canyon_id = db.Column(db.Integer, db.ForeignKey('canyons.id'), nullable=False)
+user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+```
+
+These foreign keys link the Comment to a User and a Canyon. This relationship must exist as a Comment has to be made by a User and the Comment has to be made on a Canyon.
+
+Similarly, these are the relationships that the Comment model has:
+
+```py
+canyon = db.relationship('Canyon', back_populates='comments')
+user = db.relationship('User', back_populates='comments')
+```
+
+Once again, ```back populate``` creates a virtual column in the Canyon and User models for Comment.  
+```back_populates='comments'``` references a plural form of comments to demonstrate the relationship; both a Canyon and a User can have many Comments associated with them.
+
+#### **UserCanyon Model**
+
+As with the Comment model, the UserCanyon model has two foreign key attributes; ```user_id``` and ```canyon_id```. Both of these attributes are required to make a UserCanyon object, as the UserCanyon model is designed to link a specific User with a specific Canyon they wish to do or tick off as completed.
+
+The UserCanyon model also has the same relationships as the Comment model, where a Canyon and a User can have many UserCanyon entries associated with them. 
 
 ---
 
 ## R9 
 ### **Discuss the database relations to be implemented in your application**
 
-- User Table
-- Canyon Table
-- Comment Table
+The entities shown in the ERD in [R6](#r6) each represent a table in the database. These tables are User table, Canyon table, Comment table and UserCanyon table.
+
+Relationships between these tables are formed by the primary key of one table existing as a foreign key in another table. This normalises the data by removing any redunancnies and duplicated data between tables, such that each table contains data about that entity and any data from another table can be linked via its id and foreign key. For example, the primary key of the User table is 'id' and this appears as a foreign key in the Canyon table. This relation means when a row is created in the Canyon table, the id of the user that created that row will be inserted as a 'user_id' in the Canyon table. This relation also means that if the same User were to be deleted from the User table, the row in the Canyon table with that users id will also be deleted, as a Canyon must have a user that created it.
+
+The specific relationships shown in [R6](#r6) are:
+
+- A User can be the creator of as many Canyons as they like, including none. Therefore the relationship between user and canyons is **one to zero or many**. A Canyon must have only one User associated with creating it.
+- A User can post as many Comments as they like, including none. Therefore the relationship between User and Comments is **one to zero or many**. A Comment must have only one User associated with it.
+- A Canyon can have many Comments on it, including none. Therefore the relationship between Canyon and Comments is **one to zero or many**. A Comment must be associated with only one Canyon.
+- A User can tag as many Canyons as they like as 'To Do' or 'Completed', including none, and creating a User_Canyon entry while doing so. Therefore the relationship between User and User_Canyons is **one to zero or many**. A User_Canyons entry must be associated with only one user.
+- A Canyon can be tagged as 'To Do' or 'Completed' by many Users, including none. Therefore the relationship between Canyon and User_Canyons is **one to zero or many**. A User_Canyons entry must be associated with only one canyon.
 
 ---
 

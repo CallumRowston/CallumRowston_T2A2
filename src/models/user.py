@@ -14,7 +14,7 @@ class User(db.Model):
     # Relationships
     canyons = db.relationship('Canyon', back_populates='user', cascade='all, delete')
     comments = db.relationship('Comment', back_populates='user', cascade='all, delete')
-    user_canyons = db.relationship('UserCanyon', cascade='all, delete')
+    user_canyons = db.relationship('UserCanyon' , back_populates='user', cascade='all, delete')
 
 class UserSchema(ma.Schema):
     # Validation - name, password, email
