@@ -19,14 +19,19 @@
 
 This project will provide a functioning webserver designed specifically for the canyoning community. It will provide a centralised place for information on Australian canyons and a direct forum for users to discuss particular canyons. Currently, information and discussions are spread over multiple websites and Facebook groups, making it difficult to find consistent information and resulting in many disjointed and confusing discussions where topics are not always immediately obvious and information can get easily lost in nested comments and over-filled news feeds.
 
+Websites such as ozultimate.com provides great information about canyons but provides no way for users to communicate or discuss them. Websites such as canyoning.org.au provide a forum for discussion, but no way to discuss particular canyons and is generally a community with veyr low activity. Facebook groups such as 'Australian Canyoners' and 'OzCanyons Australia' provide lively discussion but no coherent forum as they are often flooded with posts about lost and found or photos, which is great from a helpful community perspective but makes it very difficult to find information about particular canyons.
+
+This project aims to provide a way to combine the best features of each of these websites to keep information easy to access and keep discussions on topic and useful.
+
 ---
 
 ## R2 Why is it a problem that needs solving?
 
-Canyoning can be a dangerous and even fatal adventure pursuit without correct information. Most incidents in canyons are due to human error, whether through bad technique, inaction, or often poor planning. This project aims to make canyoning safer by:
+Canyoning can be a dangerous and even fatal adventure pursuit without correct information and preparation. Most incidents in canyons are due to human error, whether through bad technique, inaction, or often poor planning. Plenty of information exists with people willing to update others on conditions and changes to canyons over time, but this information and discussion is far too often obscured by being spread across multiple domains. This project aims to make discussions and information about canyoning easier to find, and as a result make the entire practice safer, by::
 
 1. Making basic information about specific canyons easily accessible, such as minimum rope length required, difficulty, and number of abseils.
-2. Crowd sourcing information regarding conditions by providing the ability to comment on specific canyons to let others know of any changes such as high flow, rock and tree falls, and broken abseil anchors.
+2. Crowd sourcing information regarding conditions by providing the ability to comment on specific canyons to let others know of any changes to conditions such as high flow, rock and tree falls, and broken abseil anchors.
+3. Providing a way for users to mark canyons as 'To Do' or 'Completed' so they can check canyons and their associated comments they plan to do before their trip or provide helpful comments for canyons they have completed.
 
 ---
 
