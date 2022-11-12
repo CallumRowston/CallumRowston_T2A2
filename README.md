@@ -42,8 +42,29 @@ Canyoning can be a dangerous and even fatal adventure pursuit without correct in
 ## R3 
 ### **Why have you chosen this database system. What are the drawbacks compared to others?**
 
-The chosen database system for this project is PostgreSQL, a Relational Database Management System (RDBMS) using Structured Query Language (SQL) to access it. This type of database system stores data in tables with rows and columns, and uses SQL to query the database. NoSQL is the alternative to an RDBMS and stores data in JSON format.
+The chosen database system for this project is PostgreSQL, a Relational Database Management System (RDBMS) using Structured Query Language (SQL) to query the database. This type of database system stores data in tables with rows and columns. NoSQL is the alternative to an RDBMS and stores data in JSON format.
 
+NoSQL databses are fantastic at being flexible with data due to its schema. This is great for scenarios where data inputs are changing and the attributes are unknown. However this project is generally aware of all incoming data and how it should be handled, due to the RDBMS schema. A NoSQL database also excels at processing large quantities of data (TBs), however this application is unlikely to be handling such amounts of data now or in the future. For these data consistency, workload and flexibility concerns, an RDBMS was chosen for this project 
+
+(1)
+
+PostgreSQL was chosen for this project for the following reasons:
+
+- Robust language support. PostgreSQL supports writing database functions in multiple programming languages. Most importantly it supports Python which was to be used for development, and works well with web frameworks such as Flask which was also used for this project.
+- It is free and open-source which makes it an unbeatable candidate in regards to cost.
+- It is inherently scalable, meaning this project can be easily expanded on in the future.
+- Support for a large amount of data types. Although the data types used in this project are relatively standard, having the option of more complex data types such as ```money``` and ```range``` types will allow for exciting possibilities for the API in the future.
+- Specific support for geographic objects, allowing it to be used for storing location based information that could be very useful for providing precise location data for canyoning.
+
+  (2,3)
+
+However, some drawbacks of using PostgreSQL include:
+
+- As a side effect of PostgreSQL's robust compatibility, it is generally considered to be slower than alternatives such as MySQL, especially for read-heavy tasks. However, due to the scale of this API, the difference is likely to be negligibile or altogether unnoticeable.
+- In addition to read-heavy tasks causing performance issues, PostgreSQL allocates about 10mb of memory per client connection, meaning if a large amount of users were to adopt this application, it may performance issues for users, resulting in a bad user experience.
+- PostgreSQL has less third party tools and services associated with it as it has long been less popular than MySQL, despite it's growth in popularity over the last few years.
+
+  (2,3)
 
 ---
 
@@ -179,3 +200,9 @@ The Trello board can be found [here](https://trello.com/b/R4psmhnY/t2a2-api-webs
 ## **Installation and Setup**
 
 ## **References**
+
+1. https://hevodata.com/learn/relational-database-vs-nosql/#sf
+
+2. https://www.prisma.io/dataguide/postgresql/benefits-of-postgresql
+
+3. https://www.cybertec-postgresql.com/en/postgresql-overview/advantages-of-postgresql/
