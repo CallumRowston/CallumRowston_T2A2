@@ -90,7 +90,7 @@ def create_canyon():
 
     return {'Error': 'You must be logged in to add a canyon'}, 404
 
-@canyons_bp.route('/<int:id>/update', methods=['PUT', 'PATCH'])
+@canyons_bp.route('/<int:id>/update/', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_canyon(id):
     # Allows an admin to update canyon details in the database
@@ -152,11 +152,11 @@ def get_all_comments_from_canyon(id):
 
     # If any comments were found by the query, return them
     if comments:
-        return CommentSchema(many=True).dump(comments)
+        return CommentSchema(many=True, exclude=['canyon']).dump(comments)
 
     return {'Error': f'No comments found for canyon with id: {id}'}, 404
 
-@canyons_bp.route('/comments/<int:comment_id>')
+@canyons_bp.route('/comments/<int:comment_id>/')
 def get_one_comment(comment_id):
     # Returns a selected comment from a selected canyon
 
@@ -166,11 +166,11 @@ def get_one_comment(comment_id):
 
     # If a comment was found by the query, return it
     if comment:
-        return CommentSchema().dump(comment)
+        return CommentSchema(exclude=['canyon']).dump(comment)
 
     return {'Error': f'Comment not found with id {comment_id}'}, 404
 
-@canyons_bp.route('/comments/<int:user_id>/')
+@canyons_bp.route('/comments/user/<int:user_id>/')
 def get_all_comments_from_user(user_id):
     # Returns all comments from a selected user
 
@@ -180,7 +180,7 @@ def get_all_comments_from_user(user_id):
 
     # If any comments were found by the query, return them
     if comments:
-        return CommentSchema().dump(comments)
+        return CommentSchema(many=True, exclude=['canyon']).dump(comments)
 
     return {'Error': f'No comments found for user with id {user_id}'}, 404
 
@@ -206,7 +206,7 @@ def create_comment_on_canyon(id):
         db.session.commit()
         return {
             "Message": "Comment posted successfully",
-            "Comment": CommentSchema().dump(comment)
+            "Comment": CommentSchema(exclude=['canyon']).dump(comment)
         }
 
     return {'Error': f'Canyon not found with id {id}'}, 404
@@ -231,7 +231,7 @@ def update_comment(comment_id):
         db.session.commit()
         return {
             "Message": "Comment updated successfully",
-            "Comment": CommentSchema().dump(comment)
+            "Comment": CommentSchema(exclude=['canyon']).dump(comment)
         }
 
     return {'Error': f'Comment not found with id {comment_id}'}, 404
@@ -260,28 +260,28 @@ def delete_comment(comment_id):
 # GET, POST, and DELETE routes for users to tag canyons as 'To Do' or 'Completed'
 # Logged in users can see other users 'To Do' and 'Completed' canyons but a user can only add or delete from their own list
 
-@canyons_bp.route('/to_do/<int:id>/')
+@canyons_bp.route('/to_do/<int:user_id>/')
 @jwt_required()
-def get_user_canyons_to_do(id):
+def get_user_canyons_to_do(user_id):
     # Returns all canyons that the specified user has tagged 'To Do'
 
     # Query to get all canyons tagged as 'To Do' from UserCanyon table where the user_id matches the id entered in the route
     stmt = db.select(UserCanyon).where(and_(
-        UserCanyon.user_id == id,
+        UserCanyon.user_id == user_id,
         UserCanyon.tag == 'To Do'
     ))
     canyons = db.session.scalars(stmt)
 
     return UserCanyonSchema(many=True).dump(canyons)
 
-@canyons_bp.route('/completed/<int:id>/')
+@canyons_bp.route('/completed/<int:user_id>/')
 @jwt_required()
-def get_user_canyons_completed(id):
+def get_user_canyons_completed(user_id):
     # Returns all canyons that the specified user has tagged 'Completed'
 
     # Query to get all canyons tagged as 'Completed' from UserCanyon table where the user_id matches the id entered in the route
     stmt = db.select(UserCanyon).where(and_(
-        UserCanyon.user_id == id,
+        UserCanyon.user_id == user_id,
         UserCanyon.tag == 'Completed'
     ))
     canyons = db.session.scalars(stmt)
