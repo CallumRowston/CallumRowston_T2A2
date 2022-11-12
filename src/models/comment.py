@@ -5,7 +5,7 @@ class Comment(db.Model):
     __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(250))
+    message = db.Column(db.String(250), nullable=False)
     date_posted = db.Column(db.Date)
 
     # Foreign Keys

@@ -13,7 +13,7 @@ def create_app():
     app = Flask(__name__)
 
     #JSON sorting and environment variables
-    app.config ['JSON_SORT_KEYS'] = False
+    app.config['JSON_SORT_KEYS'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 
@@ -23,10 +23,10 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    #Home route for testing
+    #Home route 
     @app.route('/')
     def index():
-        return 'Test Test Test'
+        return {'Message': 'Welcome to the Canyoning Home Page'}
 
     #Register Blueprints
     app.register_blueprint(db_commands)
@@ -36,23 +36,21 @@ def create_app():
     app.register_blueprint(admin_bp)
 
     # Error handling
-    @app.errorhandler(404)
-    def not_found(err):
-        return {'Error': str(err)}, 404
+    @app.errorhandler(400)
+    def bad_request(err):
+        return {'error': str(err)}, 400
 
     @app.errorhandler(KeyError)
     def key_error(err):
         return {'Error': f'The field {err} is required.'}, 400
 
+    @app.errorhandler(404)
+    def not_found(err):
+        return {'Error': str(err)}, 404
+
     @app.errorhandler(ValidationError)
     def validation_error(err):
         return {'error': err.messages}, 400
 
-    @app.errorhandler(400)
-    def bad_request(err):
-        return {'error': str(err)}, 400
-
-    #Basic test
-    print('Hello Canyon')
     return app
     

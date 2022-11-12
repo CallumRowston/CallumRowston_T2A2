@@ -11,15 +11,18 @@ users_bp = Blueprint('users', __name__, url_prefix='/users')
 def get_all_users():
     # Allows an admin to access all user details, excluding passwords
     authorize_user()
+    
+    # Query to get all users from user table and order by id
     stmt = db.select(User).order_by(User.id)
     users = db.session.scalars(stmt)
-    print(type(UserSchema))
     return UserSchema(many=True, exclude=['password']).dump(users)
 
 @users_bp.route('/<int:id>/')
 @jwt_required()
 def get_one_user(id):
     # Allows a user to get another user details, excluding password and email for privacy
+
+    # Query to get one user from user table whose id matches the id entered in the route
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
 
@@ -32,6 +35,8 @@ def get_one_user(id):
 @jwt_required()
 def update_user():
     # Allows a user to update their own username, email or password
+
+    # Query to get one user from user table whose id matches the id of the logged in user
     stmt = db.select(User).filter_by(id=get_jwt_identity())
     user = db.session.scalar(stmt)
 

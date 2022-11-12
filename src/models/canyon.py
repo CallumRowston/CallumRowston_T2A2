@@ -1,6 +1,6 @@
 from init import db, ma
 from marshmallow import fields
-from marshmallow.validate import Length, And, Regexp, OneOf
+from marshmallow.validate import OneOf
 
 VALID_DIFFICULTIES = ('Easy', 'Medium', 'Hard')
 
@@ -8,8 +8,8 @@ class Canyon(db.Model):
     __tablename__ = 'canyons'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
-    area = db.Column(db.String(100))
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    area = db.Column(db.String(50))
     description = db.Column(db.String(500))
     estimated_time_hrs = db.Column(db.Integer)
     number_abseils = db.Column(db.Integer, default=0)
@@ -24,7 +24,7 @@ class Canyon(db.Model):
     # Relationships
     user = db.relationship('User', back_populates='canyons')
     comments = db.relationship('Comment', back_populates='canyon', cascade='all, delete')
-    # to_do = db.relationship('UserCanyon', back_populates='canyon', cascade='all, delete')
+    user_canyons = db.relationship('UserCanyon', cascade='all, delete')
 
 class CanyonSchema(ma.Schema):
 

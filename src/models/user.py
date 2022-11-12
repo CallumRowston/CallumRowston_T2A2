@@ -11,9 +11,10 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
+    # Relationships
     canyons = db.relationship('Canyon', back_populates='user', cascade='all, delete')
     comments = db.relationship('Comment', back_populates='user', cascade='all, delete')
-    # to_do = db.relationship('UserCanyonToDo', back_populates='user', cascade='all, delete')
+    user_canyons = db.relationship('UserCanyon', cascade='all, delete')
 
 class UserSchema(ma.Schema):
     # Validation - name, password, email
