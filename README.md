@@ -1,4 +1,10 @@
-# **Canyoning API Webserver**
+# **Canyoning API Webserver - Callum Rowston T2A2**
+
+## Quick Links
+
+  - [Github Repository](https://github.com/CallumRowston/CallumRowston_T2A2)
+  - [Installation and Setup]()
+  - [Trello Workspace](https://trello.com/b/R4psmhnY/t2a2-api-webserver-canyoning-api)
 
 ## Table Of Contents
 
@@ -124,10 +130,39 @@ Another benefit of ORMs is they provide some but not complete protection from SQ
 ## R7 
 ### **Third party services**
 
-- SQLAlchemy
-- Flask (Marshmallow, Bcrypt, JWT Extended)
-- psycopg2
-- dotenv
+Third party packages and services this app uses are listed below:
+
+
+
+- [flask-marshmallow](https://pypi.org/project/flask-marshmallow/)
+
+  A Python library that provides integration between the Flask web framework and the marshmallow library. Marshamllow serialises and deserialises SQLAlchemy and Python objects so they can be used in JSON format in the request and response bodies. Marshmallow also 
+
+- [flask-Bcrypt](https://pypi.org/project/Flask-Bcrypt/)
+
+  A Flask extension that uses hashing to protect sensitive information. In contrast to other hashing algorithms, Bcrypt is designed to be slow to make it more difficult to crack. In this project, Bcrypt is used to hash User passwords for secure storage in the database.
+
+- [flask-JWT-Extended](https://pypi.org/project/Flask-JWT-Extended/)
+  
+  A Flask extension that adds support for JSON Web Tokens (JWT). JWTs are a secure and self contained way of sending data in JSON format. When a user logs in, they are provided with a JWT that can then be used as a Bearer token in the authorization header of a request to grant access to protected routes. In this project JWTs were used to add authentication and authorization requirements to routes, such that users must be logged in to access functionality such as commenting and updating user information.
+
+  (7)
+
+- [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
+  
+  A Python library containing an "industrial strength" ORM with the full SQL toolkit available to execute all types of queries via an object model. The ORM is used in this project to map tables from the PostgreSQL database to Python objects. SQLAlchemy also provides some sanitisation of data.
+
+- [psycopg2](https://pypi.org/project/psycopg2/)
+  
+  A PostgreSQL database adaptor for Python implemented in C as a libpq wrapper, ensuring security and efficiency. It allowed this Python application to perform database queries on the PostgreSQL database.
+
+- [python-dotenv](https://pypi.org/project/python-dotenv/)
+
+  A Python library that is used to read key-value pairs from the .env file and set them as environment variables in this project. As a result, the project loads with configured environment variables and does not need these to be manually set.
+
+- [pip-review](https://pypi.org/project/python-dotenv/)
+
+  A wrapper for pip which can list, retrieve and install available package updates that are required for this projects functionality.
 
 ---
 
@@ -246,3 +281,5 @@ The Trello board can be found [here](https://trello.com/b/R4psmhnY/t2a2-api-webs
 5. https://dev.to/tinazhouhui/introduction-to-object-relational-mapping-the-what-why-when-and-how-of-orm-nb2
 
 6. https://blog.yellowant.com/orm-rethinking-data-as-objects-8ddaa43b1410
+
+7. https://jwt.io/introduction
