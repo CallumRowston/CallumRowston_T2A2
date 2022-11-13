@@ -18,7 +18,6 @@
   - [R8: Describe your projects models in terms of the relationships they have with each other](#r8)
   - [R9: Discuss the database relations to be implemented in your application](#r9)
   - [R10: Describe the way tasks are allocated and tracked in your project](#r10)
-  - [Installation and Setup](#installation-and-setup)
   - [References](#references)
 
 ---
@@ -296,16 +295,16 @@ The Trello board can be found [here](https://trello.com/b/R4psmhnY/t2a2-api-webs
 
 ## **References**
 
-1. https://hevodata.com/learn/relational-database-vs-nosql/#sf
+1. Hevo. Relational Database Vs NoSQL. [Internet] [cited 2022 Nov 11]; Available from: https://hevodata.com/learn/relational-database-vs-nosql/#sf
 
-2. https://www.prisma.io/dataguide/postgresql/benefits-of-postgresql
+2. Prisma. The benefits of PostgreSQL. [Internet] [cited 2022 Nov 11]; Available from: https://www.prisma.io/dataguide/postgresql/benefits-of-postgresql
 
-3. https://www.cybertec-postgresql.com/en/postgresql-overview/advantages-of-postgresql/
+3. Cybertec. Advantages of PostgreSQL. [Internet] [cited 2022 Nov 12]; Available from: https://www.cybertec-postgresql.com/en/postgresql-overview/advantages-of-postgresql/
 
-4. https://www.fullstackpython.com/object-relational-mappers-orms.html
+4. FullStackPython. Object-relational Mappers (ORMs). [Internet] [cited 2022 Nov 12]; Available from: https://www.fullstackpython.com/object-relational-mappers-orms.html
    
-5. https://dev.to/tinazhouhui/introduction-to-object-relational-mapping-the-what-why-when-and-how-of-orm-nb2
+5. Dev. Introduction to Object-relational mapping: the what, why, when and how of ORM . [Internet] [cited 2022 Nov 12]; Available from: https://dev.to/tinazhouhui/introduction-to-object-relational-mapping-the-what-why-when-and-how-of-orm-nb2
 
-6. https://blog.yellowant.com/orm-rethinking-data-as-objects-8ddaa43b1410
+6.YellowAnt. ORM: Rethinking Data as Objects. [Internet] [cited 2022 Nov 12]; Available from: https://blog.yellowant.com/orm-rethinking-data-as-objects-8ddaa43b1410
 
-7. https://jwt.io/introduction
+7. JWT. Introduction to JSON Web Tokens. [Internet] [cited 2022 Nov 12]; Available from: https://jwt.io/introduction
