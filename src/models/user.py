@@ -29,10 +29,10 @@ class UserSchema(ma.Schema):
     ))
 
     # Exclude user from canyon field
-    canyons = fields.List(fields.Nested('CanyonSchema', exclude=['user']))
+    canyons = fields.List(fields.Nested('CanyonSchema', exclude=['user', 'comments']))
     # Exclude user form comment field
-    comments = fields.List(fields.Nested('CommentSchema', exclude=['user']))
+    comments = fields.List(fields.Nested('CommentSchema', exclude=['user', 'canyon']))
 
     class Meta:
-        fields = ('id', 'name', 'email', 'password', 'is_admin')
+        fields = ('id', 'name', 'email', 'password', 'is_admin', 'canyons', 'comments')
         ordered = True

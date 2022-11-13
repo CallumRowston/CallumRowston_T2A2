@@ -152,7 +152,7 @@ def get_all_comments_from_canyon(id):
 
     # If any comments were found by the query, return them
     if comments:
-        return CommentSchema(many=True, exclude=['canyon']).dump(comments)
+        return CommentSchema(many=True).dump(comments)
 
     return {'Error': f'No comments found for canyon with id: {id}'}, 404
 
@@ -166,7 +166,7 @@ def get_one_comment(comment_id):
 
     # If a comment was found by the query, return it
     if comment:
-        return CommentSchema(exclude=['canyon']).dump(comment)
+        return CommentSchema().dump(comment)
 
     return {'Error': f'Comment not found with id {comment_id}'}, 404
 
@@ -180,7 +180,7 @@ def get_all_comments_from_user(user_id):
 
     # If any comments were found by the query, return them
     if comments:
-        return CommentSchema(many=True, exclude=['canyon']).dump(comments)
+        return CommentSchema(many=True).dump(comments)
 
     return {'Error': f'No comments found for user with id {user_id}'}, 404
 
@@ -206,7 +206,7 @@ def create_comment_on_canyon(id):
         db.session.commit()
         return {
             "Message": "Comment posted successfully",
-            "Comment": CommentSchema(exclude=['canyon']).dump(comment)
+            "Comment": CommentSchema().dump(comment)
         }
 
     return {'Error': f'Canyon not found with id {id}'}, 404
@@ -231,7 +231,7 @@ def update_comment(comment_id):
         db.session.commit()
         return {
             "Message": "Comment updated successfully",
-            "Comment": CommentSchema(exclude=['canyon']).dump(comment)
+            "Comment": CommentSchema().dump(comment)
         }
 
     return {'Error': f'Comment not found with id {comment_id}'}, 404

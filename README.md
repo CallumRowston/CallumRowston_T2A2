@@ -173,7 +173,7 @@ This API has 4 SQLAlchemy models that each represent an entity from the ERD in [
 
 The SQLAlchemy models and their relationships are:
 
-#### **User Model**
+#### **User Model/Schema**
 
 The User model is the only model without a foreign key. A User can exist by itself, but all other models require a User id as a foreign key. The User model has access to data form other models via its relationships shown here:
 
@@ -185,7 +185,14 @@ user_canyons = db.relationship('UserCanyon', back_populates='user', cascade='all
 
 By setting ```back_populates='user'```, a virtual column is created in the corresponding model in the realtionship. This means that there is a link back to the User model within the Canyon, Comment and UserCanyon model. Cascade delete means when a user is deleted, its related canyons, comments and user_canyons are also deleted, as these must all be associated with a user.
 
-#### **Canyon Model**
+The User schema includes validation for the models name and password attributes. It also ensures the canyon and comments related to that user are returned with the user. As can be seen below, the nested canyons field excludes the user and comments attributes from the data and the nested comments field excludes the user and canyon attributes as these fields are already inherent in the User object itself. 
+
+```py
+canyons = fields.List(fields.Nested('CanyonSchema', exclude=['user', 'comments']))
+comments = fields.List(fields.Nested('CommentSchema', exclude=['user', 'canyon']))
+```
+
+#### **Canyon Model/Schema**
 
 The Canyon model has a foreign key attribute ```'user_id'``` which references the user that created the Canyon object, as seen below:
 
@@ -204,7 +211,14 @@ user_canyons = db.relationship('UserCanyon' , back_populates='canyon', cascade='
 
 As with the User model, ```back_populates``` means that the Canyon model can be used in the other models with an established relationship. In the case of the User relationship, ```back_populates='canyons'``` is plural as a User can be associated with many canyons. However a Comment and a UserCanyon can only be associated with one canyon, thus those ```back_populates``` values are singular.
 
-#### **Comment Model**
+The Canyon schema includes validation for the difficulty to ensure it is set to one of three values so that they can be searched for by difficulty. The schema includes the nested user field that only returns the user name and also excludes the canyon object from being nested within the comments. 
+
+```py
+user = fields.Nested('UserSchema', only=['name'])
+comments = fields.List(fields.Nested('CommentSchema', exclude=['canyon']))
+```
+
+#### **Comment Model/Schema**
 
 The comment model has two foreign key attributes; ```user_id``` and ```canyon_id```.
 
@@ -225,11 +239,25 @@ user = db.relationship('User', back_populates='comments')
 Once again, ```back populate``` creates a virtual column in the Canyon and User models for Comment.  
 ```back_populates='comments'``` references a plural form of comments to demonstrate the relationship; both a Canyon and a User can have many Comments associated with them.
 
-#### **UserCanyon Model**
+The Comment schema ensures any returned comments have the user nested within it but only return the username and no other attributes. The canyon is also nested and only returns the canyon id and name.
+
+```py
+user = fields.Nested('UserSchema', only=['name'])
+canyon = fields.Nested('CanyonSchema', only=['id', 'name'])
+```
+
+#### **UserCanyon Model/Schema**
 
 As with the Comment model, the UserCanyon model has two foreign key attributes; ```user_id``` and ```canyon_id```. Both of these attributes are required to make a UserCanyon object, as the UserCanyon model is designed to link a specific User with a specific Canyon they wish to do or tick off as completed.
 
-The UserCanyon model also has the same relationships as the Comment model, where a Canyon and a User can have many UserCanyon entries associated with them. 
+The UserCanyon model also has the same relationships as the Comment model, where a Canyon and a User can have many UserCanyon entries associated with them.
+
+The UserCanyon schema provides validation to ensure the object has a tag that is either 'To Do' or 'Completed', otherwise there is no reason for the data to exist in the database. The comment schema ensures the return of the related user and canyon objects, exlcuding the user and comments of the returned canyons.
+
+```py
+user = fields.Nested('UserSchema', only=['id'])
+canyon = fields.Nested('CanyonSchema', exclude=['user', 'comments'])
+```
 
 ---
 
@@ -265,8 +293,6 @@ The Trello board can be found [here](https://trello.com/b/R4psmhnY/t2a2-api-webs
 ![Trello1](docs/trello4.png)
 ![Trello1](docs/trello5.png)
 ![Trello1](docs/trello6.png)
-
-## **Installation and Setup**
 
 ## **References**
 
