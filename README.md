@@ -132,8 +132,6 @@ Another benefit of ORMs is they provide some but not complete protection from SQ
 
 Third party packages and services this app uses are listed below:
 
-
-
 - [flask-marshmallow](https://pypi.org/project/flask-marshmallow/)
 
   A Python library that provides integration between the Flask web framework and the marshmallow library. Marshamllow serialises and deserialises SQLAlchemy and Python objects so they can be used in JSON format in the request and response bodies. Marshmallow also 
