@@ -113,9 +113,7 @@ Another benefit of ORMs is they provide some but not complete protection from SQ
 ---
 
 ## R5 
-### **API Endpoint Documentation**
-
-[Go To API Endpoint Documentation](docs/API-Endpoints.md)
+### [**API Endpoint Documentation**](docs/API-Endpoints.md)
 
 ---
 
@@ -131,9 +129,17 @@ Another benefit of ORMs is they provide some but not complete protection from SQ
 
 Third party packages and services this app uses are listed below:
 
+- [Flask](https://pypi.org/project/Flask/)
+
+  A Python micro web framework. Flask includes the Werkzeug utilties library and Jinja templating engine. Furhter functionality is added through extensions.
+
+- [Marshmallow](https://pypi.org/project/marshmallow/)
+
+  A Python library used in this project to convert data to and from Python objects.
+
 - [flask-marshmallow](https://pypi.org/project/flask-marshmallow/)
 
-  A Python library that provides integration between the Flask web framework and the marshmallow library. Marshamllow serialises and deserialises SQLAlchemy and Python objects so they can be used in JSON format in the request and response bodies. Marshmallow also 
+  A Python library that provides integration between the Flask web framework and the marshmallow library. It serialises and deserialises SQLAlchemy and Python objects so they can be used in JSON format in the request and response bodies.
 
 - [flask-Bcrypt](https://pypi.org/project/Flask-Bcrypt/)
 
@@ -208,7 +214,7 @@ user_canyons = db.relationship('UserCanyon' , back_populates='canyon', cascade='
 
 As with the User model, ```back_populates``` means that the Canyon model can be used in the other models with an established relationship. In the case of the User relationship, ```back_populates='canyons'``` is plural as a User can be associated with many canyons. However a Comment and a UserCanyon can only be associated with one canyon, thus those ```back_populates``` values are singular.
 
-The Canyon schema includes validation for the difficulty to ensure it is set to one of three values so that they can be searched for by difficulty. The schema includes the nested user field that only returns the user name and also excludes the canyon object from being nested within the comments. 
+The Canyon schema includes validation for the difficulty to ensure it is set to one of three values so that they can be searched for by difficulty. The schema includes the nested user field that only returns the user name and also excludes the canyon object from being nested within the comments.
 
 ```py
 user = fields.Nested('UserSchema', only=['name'])
@@ -305,6 +311,6 @@ The Trello board can be found [here](https://trello.com/b/R4psmhnY/t2a2-api-webs
    
 5. Dev. Introduction to Object-relational mapping: the what, why, when and how of ORM . [Internet] [cited 2022 Nov 12]; Available from: https://dev.to/tinazhouhui/introduction-to-object-relational-mapping-the-what-why-when-and-how-of-orm-nb2
 
-6.YellowAnt. ORM: Rethinking Data as Objects. [Internet] [cited 2022 Nov 12]; Available from: https://blog.yellowant.com/orm-rethinking-data-as-objects-8ddaa43b1410
+6. YellowAnt. ORM: Rethinking Data as Objects. [Internet] [cited 2022 Nov 12]; Available from: https://blog.yellowant.com/orm-rethinking-data-as-objects-8ddaa43b1410
 
 7. JWT. Introduction to JSON Web Tokens. [Internet] [cited 2022 Nov 12]; Available from: https://jwt.io/introduction
