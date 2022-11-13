@@ -3,7 +3,7 @@
 ## Quick Links
 
   - [Github Repository](https://github.com/CallumRowston/CallumRowston_T2A2)
-  - [Installation and Setup]()
+  - [Installation and Setup](docs/installation-setup.md)
   - [Trello Workspace](https://trello.com/b/R4psmhnY/t2a2-api-webserver-canyoning-api)
 
 ## Table Of Contents
@@ -264,10 +264,6 @@ canyon = fields.Nested('CanyonSchema', exclude=['user', 'comments'])
 ## R9 
 ### **Discuss the database relations to be implemented in your application**
 
-The entities shown in the ERD in [R6](#r6) each represent a table in the database. These tables are User table, Canyon table, Comment table and UserCanyon table.
-
-Relationships between these tables are formed by the primary key of one table existing as a foreign key in another table. This normalises the data by removing any redunancnies and duplicated data between tables, such that each table contains data about that entity and any data from another table can be linked via its id and foreign key. For example, the primary key of the User table is 'id' and this appears as a foreign key in the Canyon table. This relation means when a row is created in the Canyon table, the id of the user that created that row will be inserted as a 'user_id' in the Canyon table. This relation also means that if the same User were to be deleted from the User table, the row in the Canyon table with that user's id will also be deleted, as a Canyon must have a User that created it.
-
 The specific relationships shown in [R6](#r6) are:
 
 - A User can be the creator of as many Canyons as they like, including none. Therefore the relationship between user and canyons is **one to zero or many**. A Canyon must have only one User associated with creating it.
@@ -275,6 +271,12 @@ The specific relationships shown in [R6](#r6) are:
 - A Canyon can have many Comments on it, including none. Therefore the relationship between Canyon and Comments is **one to zero or many**. A Comment must be associated with only one Canyon.
 - A User can tag as many Canyons as they like as 'To Do' or 'Completed', including none, and creating a User_Canyon entry while doing so. Therefore the relationship between User and User_Canyons is **one to zero or many**. A User_Canyons entry must be associated with only one user.
 - A Canyon can be tagged as 'To Do' or 'Completed' by many Users, including none. Therefore the relationship between Canyon and User_Canyons is **one to zero or many**. A User_Canyons entry must be associated with only one canyon.
+
+The project will be developed to reflect these relationships between database entities.
+
+The entities shown in the ERD in [R6](#r6) each represent a table in the database. These tables are User table, Canyon table, Comment table and UserCanyon table.
+
+Relationships between these tables are formed by the primary key of one table existing as a foreign key in another table. This normalises the data by removing any redunancnies and duplicated data between tables, such that each table contains data about that entity and any data from another table can be linked via its id and foreign key. For example, the primary key of the User table is 'id' and this appears as a foreign key in the Canyon table. This relation means when a row is created in the Canyon table, the id of the user that created that row will be inserted as a 'user_id' in the Canyon table. This relation also means that if the same User were to be deleted from the User table, the row in the Canyon table with that user's id will also be deleted, as a Canyon must have a User that created it.
 
 ---
 
